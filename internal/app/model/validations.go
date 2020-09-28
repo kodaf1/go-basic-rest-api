@@ -7,6 +7,7 @@ func requiredIf(cond bool) validation.RuleFunc {
 		if cond {
 			return validation.Validate(value, validation.Required)
 		}
+
 		return nil
 	}
 }

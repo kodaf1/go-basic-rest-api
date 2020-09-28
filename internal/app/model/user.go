@@ -18,16 +18,8 @@ type User struct {
 func (u *User) Validate() error {
 	return validation.ValidateStruct(
 		u,
-		validation.Field(
-			&u.Email,
-			validation.Required,
-			is.Email,
-		),
-		validation.Field(
-			&u.Password,
-			validation.By(requiredIf(u.EncryptedPassword == "")),
-			validation.Length(6, 32),
-		),
+		validation.Field(&u.Email, validation.Required, is.Email),
+		validation.Field(&u.Password, validation.By(requiredIf(u.EncryptedPassword == "")), validation.Length(6, 100)),
 	)
 }
 
@@ -41,12 +33,12 @@ func (u *User) BeforeCreate() error {
 
 		u.EncryptedPassword = enc
 	}
+
 	return nil
 }
 
 func encryptString(s string) (string, error) {
 	b, err := bcrypt.GenerateFromPassword([]byte(s), bcrypt.MinCost)
-
 	if err != nil {
 		return "", err
 	}
